@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Patent Search - Results{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-chart-line me-2"></i>Search Results</h2>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-primary">
+                <i class="fas fa-plus me-1"></i>New Search
+            </a>
+        </div>
+
+        <!-- Search Summary -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>Search Summary
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <p class="mb-2"><strong>Patent Description:</strong></p>
+                        <p class="text-muted">{{ session_data.patent_description }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1"><strong>Session ID:</strong> <code>{{ thread_id }}</code></p>
+                        <p class="mb-1"><strong>Max Results:</strong> {{ session_data.max_results }}</p>
+                        <p class="mb-0"><strong>Status:</strong> 
+                            <span class="badge bg-success">Complete</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="resultsContainer">
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading results...</span>
+                </div>
+                <p class="mt-2 text-muted">Loading detailed results...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const threadId = "{{ thread_id }}";
+
+// Load results when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadResults();
+});
+
+async function loadResults() {
+    try {
+        const response = await axios.get(`/get_session_status/${threadId}`);
+        const data = response.data;
+        
+        if (data.workflow_complete) {
+            displayResults(data.current_state);
+        } else {
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Search is still in progress. Please wait...
+                </div>
+            `;
+        }
+        
+    } catch (error) {
+        console.error('Error loading results:', error);
+        document.getElementById('resultsContainer').innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Error loading results: ${error.response?.data?.error || error.message}
+            </div>
+        `;
+    }
+}
+
+function displayResults(state) {
+    const container = document.getElementById('resultsContainer');
+    
+    let html = '';
+    
+    // Keywords Section
+    if (state.seed_keywords) {
+        html += createKeywordsSection('Extracted Keywords', state.seed_keywords);
+    }
+    
+    if (state.enhanced_keywords) {
+        html += createKeywordsSection('Enhanced Keywords', state.enhanced_keywords);
+    }
+    
+    // IPC Classification
+    if (state.ipc_codes) {
+        html += createIPCSection(state.ipc_codes);
+    }
+    
+    // Search Queries
+    if (state.final_queries) {
+        html += createQueriesSection(state.final_queries);
+    }
+    
+    // Search Results
+    if (state.search_results) {
+        html += createSearchResultsSection(state.search_results);
+    }
+    
+    // Evaluation Scores
+    if (state.evaluation_scores) {
+        html += createEvaluationSection(state.evaluation_scores);
+    }
+    
+    container.innerHTML = html;
+}
+
+function createKeywordsSection(title, keywords) {
+    const categories = {
+        'problem_purpose': 'Problem & Purpose',
+        'object_system': 'Object & System',
+        'environment_field': 'Environment & Field'
+    };
+    
+    let html = `
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-tags me-2"></i>${title}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+    `;
+    
+    for (const [key, categoryTitle] of Object.entries(categories)) {
+        if (keywords[key] && keywords[key].length > 0) {
+            html += `
+                <div class="col-md-4 mb-3">
+                    <h6 class="text-primary">${categoryTitle}</h6>
+                    <div>
+                        ${keywords[key].map(keyword => 
+                            `<span class="keyword-badge">${keyword}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    html += `
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return html;
+}
+
+function createIPCSection(ipcCodes) {
+    return `
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-sitemap me-2"></i>IPC Classification
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    ${Array.isArray(ipcCodes) ? ipcCodes.map(code => `
+                        <div class="col-md-6 mb-2">
+                            <span class="badge bg-info">${code}</span>
+                        </div>
+                    `).join('') : `<p class="text-muted">No IPC codes available</p>`}
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function createQueriesSection(queries) {
+    return `
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-search me-2"></i>Generated Search Queries
+                </h5>
+            </div>
+            <div class="card-body">
+                ${Array.isArray(queries) ? queries.map((query, index) => `
+                    <div class="mb-2">
+                        <span class="badge bg-secondary me-2">${index + 1}</span>
+                        <code>${query}</code>
+                    </div>
+                `).join('') : `<p class="text-muted">No queries available</p>`}
+            </div>
+        </div>
+    `;
+}
+
+function createSearchResultsSection(results) {
+    return `
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-file-alt me-2"></i>Patent Search Results
+                </h5>
+            </div>
+            <div class="card-body">
+                ${Array.isArray(results) && results.length > 0 ? results.map((result, index) => `
+                    <div class="patent-card card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <span class="badge bg-primary me-2">${index + 1}</span>
+                                ${result.title || 'Patent Document'}
+                            </h6>
+                            <p class="card-text text-muted">
+                                ${result.abstract || result.description || 'No description available'}
+                            </p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        <strong>Patent Number:</strong> ${result.patent_number || 'N/A'}<br>
+                                        <strong>Applicant:</strong> ${result.applicant || 'N/A'}
+                                    </small>
+                                </div>
+                                <div class="col-md-6">
+                                    <small class="text-muted">
+                                        <strong>Publication Date:</strong> ${result.publication_date || 'N/A'}<br>
+                                        <strong>Status:</strong> ${result.status || 'N/A'}
+                                    </small>
+                                </div>
+                            </div>
+                            ${result.url ? `
+                                <div class="mt-2">
+                                    <a href="${result.url}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-external-link-alt me-1"></i>View Patent
+                                    </a>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('') : `
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No patent results found. Try refining your search terms.
+                    </div>
+                `}
+            </div>
+        </div>
+    `;
+}
+
+function createEvaluationSection(scores) {
+    return `
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-star me-2"></i>Search Quality Evaluation
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    ${Object.entries(scores).map(([metric, score]) => `
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <h4 class="text-primary">${(score * 100).toFixed(1)}%</h4>
+                                <p class="text-muted">${metric.replace('_', ' ').toUpperCase()}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+}
+</script>
+{% endblock %}
