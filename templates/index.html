@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}Patent Search - Home{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">
+                    <i class="fas fa-search me-2"></i>Patent Prior Art Search
+                </h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">
+                    Enter a description of your invention or patent idea to search for prior art and related patents.
+                    Our AI-powered system will extract key concepts, generate search keywords, and find relevant patents.
+                </p>
+
+                <form id="searchForm">
+                    <div class="mb-3">
+                        <label for="patentDescription" class="form-label">
+                            <i class="fas fa-file-alt me-1"></i>Patent Description *
+                        </label>
+                        <textarea 
+                            class="form-control" 
+                            id="patentDescription" 
+                            name="patent_description"
+                            rows="6" 
+                            placeholder="Describe your invention, including its purpose, components, functionality, and any unique features..."
+                            required></textarea>
+                        <div class="form-text">
+                            Provide a detailed description of your invention for better search results.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="maxResults" class="form-label">
+                            <i class="fas fa-list-ol me-1"></i>Maximum Results
+                        </label>
+                        <select class="form-select" id="maxResults" name="max_results">
+                            <option value="5">5 results</option>
+                            <option value="10" selected>10 results</option>
+                            <option value="20">20 results</option>
+                            <option value="50">50 results</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search me-2"></i>Start Patent Search
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Loading and Status -->
+                <div id="loadingSection" class="text-center mt-4" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Processing your patent description...</p>
+                </div>
+
+                <!-- Keyword Validation Section -->
+                <div id="validationSection" class="mt-4" style="display: none;">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="fas fa-check-circle me-2"></i>Review Extracted Keywords
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted">
+                                Please review the keywords extracted from your patent description. 
+                                You can accept them as-is, reject them to try again, or edit them manually.
+                            </p>
+                            
+                            <div id="keywordSections"></div>
+
+                            <div class="mt-3">
+                                <button type="button" class="btn btn-success me-2" onclick="validateKeywords('accept')">
+                                    <i class="fas fa-check me-1"></i>Accept Keywords
+                                </button>
+                                <button type="button" class="btn btn-danger me-2" onclick="validateKeywords('reject')">
+                                    <i class="fas fa-times me-1"></i>Reject & Regenerate
+                                </button>
+                                <button type="button" class="btn btn-warning" onclick="validateKeywords('edit')">
+                                    <i class="fas fa-edit me-1"></i>Edit Keywords
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="resultsSection" class="mt-4" style="display: none;">
+                    <div class="card border-success">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-check-circle me-2"></i>Search Complete
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-success mb-3">Your patent search has been completed successfully!</p>
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-primary" onclick="viewResults()">
+                                    <i class="fas fa-eye me-2"></i>View Detailed Results
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb me-2"></i>Example Patent Description
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    <strong>Example:</strong> A smart wearable device for continuous health monitoring that integrates 
+                    multiple biosensors including heart rate, blood oxygen saturation, skin temperature, and motion sensors. 
+                    The device uses machine learning algorithms to analyze the collected data and predict potential health issues.
+                </p>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="fillExample()">
+                    <i class="fas fa-copy me-1"></i>Use This Example
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentThreadId = null;
+let currentKeywords = null;
+
+// Get the base URL for API calls (works with proxy)
+function getBaseUrl() {
+    // Get current location path and extract the proxy prefix if it exists
+    const path = window.location.pathname;
+    if (path.includes('/proxy/')) {
+        // Extract everything up to and including the port number
+        const match = path.match(/^(.*\/proxy\/\d+)/);
+        return match ? match[1] : '';
+    }
+    return '';
+}
+
+// Fill example text
+function fillExample() {
+    document.getElementById('patentDescription').value = 
+        "A smart wearable device for continuous health monitoring that integrates multiple biosensors including heart rate, blood oxygen saturation, skin temperature, and motion sensors. The device uses machine learning algorithms to analyze the collected data and predict potential health issues.";
+}
+
+// Handle form submission
+document.getElementById('searchForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const data = {
+        patent_description: formData.get('patent_description'),
+        max_results: parseInt(formData.get('max_results'))
+    };
+    
+    // Show loading
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('validationSection').style.display = 'none';
+    document.getElementById('resultsSection').style.display = 'none';
+    
+    try {
+        // Use relative URL that works with proxy
+        const baseUrl = getBaseUrl();
+        const response = await axios.post(`${baseUrl}/start_search`, data);
+        
+        if (response.data.status === 'waiting_validation') {
+            currentThreadId = response.data.thread_id;
+            currentKeywords = response.data.seed_keywords;
+            showKeywordValidation(response.data.seed_keywords);
+        }
+        
+    } catch (error) {
+        console.error('Error starting search:', error);
+        alert('Error starting search: ' + (error.response?.data?.error || error.message));
+    } finally {
+        document.getElementById('loadingSection').style.display = 'none';
+    }
+});
+
+// Show keyword validation interface
+function showKeywordValidation(keywords) {
+    const keywordSections = document.getElementById('keywordSections');
+    keywordSections.innerHTML = '';
+    
+    const categories = {
+        'problem_purpose': 'Problem & Purpose',
+        'object_system': 'Object & System',
+        'environment_field': 'Environment & Field'
+    };
+    
+    for (const [key, title] of Object.entries(categories)) {
+        const keywordList = keywords[key] || [];
+        
+        const section = document.createElement('div');
+        section.className = 'keyword-category';
+        section.innerHTML = `
+            <h6 class="text-primary">${title}</h6>
+            <div class="keyword-list" data-category="${key}">
+                ${keywordList.map((keyword, index) => `
+                    <input type="text" class="form-control keyword-input" 
+                           value="${keyword}" data-index="${index}">
+                `).join('')}
+            </div>
+            <button type="button" class="btn btn-outline-primary btn-sm" 
+                    onclick="addKeyword('${key}')">
+                <i class="fas fa-plus me-1"></i>Add Keyword
+            </button>
+        `;
+        
+        keywordSections.appendChild(section);
+    }
+    
+    document.getElementById('validationSection').style.display = 'block';
+}
+
+// Add new keyword input
+function addKeyword(category) {
+    const keywordList = document.querySelector(`[data-category="${category}"]`);
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.className = 'form-control keyword-input';
+    newInput.placeholder = 'Enter new keyword...';
+    
+    keywordList.appendChild(newInput);
+}
+
+// Collect current keywords from form
+function collectKeywords() {
+    const keywords = {
+        problem_purpose: [],
+        object_system: [],
+        environment_field: []
+    };
+    
+    for (const category of Object.keys(keywords)) {
+        const inputs = document.querySelectorAll(`[data-category="${category}"] input`);
+        keywords[category] = Array.from(inputs)
+            .map(input => input.value.trim())
+            .filter(value => value.length > 0);
+    }
+    
+    return keywords;
+}
+
+// Handle keyword validation
+async function validateKeywords(action) {
+    if (!currentThreadId) {
+        alert('No active search session');
+        return;
+    }
+    
+    const data = {
+        thread_id: currentThreadId,
+        action: action
+    };
+    
+    if (action === 'edit') {
+        data.keywords = collectKeywords();
+    }
+    
+    // Show loading
+    document.getElementById('loadingSection').style.display = 'block';
+    document.getElementById('validationSection').style.display = 'none';
+    
+    try {
+        // Use relative URL that works with proxy
+        const baseUrl = getBaseUrl();
+        const response = await axios.post(`${baseUrl}/validate_keywords`, data);
+        
+        if (response.data.status === 'waiting_validation') {
+            currentKeywords = response.data.seed_keywords;
+            showKeywordValidation(response.data.seed_keywords);
+        } else if (response.data.status === 'complete') {
+            showSearchComplete();
+        }
+        
+    } catch (error) {
+        console.error('Error validating keywords:', error);
+        alert('Error validating keywords: ' + (error.response?.data?.error || error.message));
+        document.getElementById('validationSection').style.display = 'block';
+    } finally {
+        document.getElementById('loadingSection').style.display = 'none';
+    }
+}
+
+// Show search complete
+function showSearchComplete() {
+    document.getElementById('resultsSection').style.display = 'block';
+}
+
+// View results
+function viewResults() {
+    if (currentThreadId) {
+        const baseUrl = getBaseUrl();
+        window.location.href = `${baseUrl}/results/${currentThreadId}`;
+    }
+}
+</script>
+{% endblock %}
