@@ -18,6 +18,7 @@ requests = "^2.31.0"
 beautifulsoup4 = "^4.12.0"
 pydantic = "^2.8.0"
 python-dotenv = "^1.0.0"
+google-search-results = "^2.4.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.0"
