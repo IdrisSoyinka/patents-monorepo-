@@ -67,6 +67,10 @@ def initialize_session_state():
         st.session_state.result = None
     if 'search_history' not in st.session_state:
         st.session_state.search_history = []
+    if 'patent_description_input' not in st.session_state:
+        st.session_state.patent_description_input = ""
+    if 'processed_files' not in st.session_state:
+        st.session_state.processed_files = set()
 
 def display_keywords(keywords: Dict, title: str):
     """Display keywords in a formatted box"""
@@ -147,24 +151,65 @@ def main():
     
     with col1:
         st.header("📝 Patent Description")
-        
+
+        uploaded_files = st.file_uploader(
+            "Drag and drop text files or paste your description below",
+            type=["txt", "md", "rtf", "csv", "json"],
+            accept_multiple_files=True,
+            help="Upload text-based files to prefill the patent description"
+        )
+
+        if uploaded_files:
+            new_files_added = False
+
+            for uploaded_file in uploaded_files:
+                file_identifier = (uploaded_file.name, uploaded_file.size)
+
+                if file_identifier in st.session_state.processed_files:
+                    continue
+
+                file_bytes = uploaded_file.getvalue()
+                text_content = None
+
+                for encoding in ("utf-8", "utf-16", "latin-1"):
+                    try:
+                        text_content = file_bytes.decode(encoding)
+                        break
+                    except UnicodeDecodeError:
+                        continue
+
+                if text_content is None:
+                    st.warning(f"Unable to read {uploaded_file.name} as text. Please upload a text-based file.")
+                    continue
+
+                if st.session_state.patent_description_input:
+                    st.session_state.patent_description_input += "\n\n"
+
+                st.session_state.patent_description_input += text_content.strip()
+                st.session_state.processed_files.add(file_identifier)
+                new_files_added = True
+
+            if new_files_added:
+                st.success("Uploaded file content added to the patent description below.")
+
         # Patent description input
         patent_description = st.text_area(
             "Enter your patent description",
             height=200,
             placeholder="""Example: A smart wearable device for continuous health monitoring that integrates multiple biosensors including heart rate, blood oxygen saturation, skin temperature, and motion sensors. The device uses machine learning algorithms to analyze the collected data and predict potential health issues.""",
-            help="Provide a detailed description of your patent or invention"
+            help="Provide a detailed description of your patent or invention",
+            key="patent_description_input"
         )
-        
+
         # Action buttons
         col_btn1, col_btn2, col_btn3 = st.columns(3)
-        
+
         with col_btn1:
             start_search = st.button("🚀 Start Search", type="primary", use_container_width=True)
-        
+
         with col_btn2:
             reset_search = st.button("🔄 Reset", use_container_width=True)
-        
+
         with col_btn3:
             clear_history = st.button("🗑️ Clear History", use_container_width=True)
 
@@ -202,6 +247,8 @@ def main():
         st.session_state.thread_id = None
         st.session_state.current_step = 0
         st.session_state.result = None
+        st.session_state.patent_description_input = ""
+        st.session_state.processed_files = set()
         st.success("Search reset!")
         st.rerun()
 

@@ -20,6 +20,21 @@ from .nodes.ipc_classification import ipc_classification_node
 from .nodes.patent_search import patent_search_node
 from .nodes.evaluation import evaluation_node
 
+
+def should_continue_validation(state: PatentSearchState) -> str:
+    """Determine the next step after human validation."""
+    if state.get("validation_complete"):
+        return "enhancement"
+    return "human_validation"
+
+
+def should_continue_workflow(state: PatentSearchState) -> str:
+    """Determine whether to continue to evaluation or end the workflow."""
+    search_results = state.get("search_results")
+    if search_results:
+        return "evaluation"
+    return "__end__"
+
 # Load environment variables
 load_dotenv()
 
