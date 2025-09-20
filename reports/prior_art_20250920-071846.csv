@@ -1,0 +1,64 @@
+source,id,title,url,year,location,snippet
+arxiv,1502.02435v1,Can rodents conceive hyperbolic spaces?,http://arxiv.org/abs/1502.02435v1,2015,Abstract,"The grid cells discovered in the rodent medial entorhinal cortex have been
+proposed to provide a metric for Euclidean space, possibly even hardwired in
+the embryo. Yet one class of models describing the formation of grid unit
+selectivity is entirely based on developmental self-organization, and as such
+it predicts that the metric it expresses should reflect the environment to
+which the animal has adapted. We show tha"
+arxiv,1511.08262v1,Identifying signature Zernike modes for efficient light delivery through brain tissue,http://arxiv.org/abs/1511.08262v1,2015,Abstract,"Recent progress in neuroscience to image and investigate brain function has
+been made possible by impressive developments in optogenetic and opto-molecular
+tools. Such research requires advances in optical techniques for the delivery
+of light through brain tissue with high spatial resolution. The tissue causes
+distortions of the wavefront of the incoming light which broadens the focus,
+thereby reducing the intensity"
+arxiv,1807.05915v3,Optical Cages,http://arxiv.org/abs/1807.05915v3,2018,Abstract,"We examine array of metal-mesh frameworks for their wide-band absorption.
+These take the form of quasi-crystal optical cages. An array of cages tends to
+focus the incoming radiation within each framework. An array of
+cage-within-cage funnels the radiation from the outer cage to its inner core
+even further."
+arxiv,1801.03819v2,Control and Management of Multiple RATs in Wireless Networks: An SDN Approach,http://arxiv.org/abs/1801.03819v2,2018,Abstract,"Telecom operators are using a variety of Radio Access Technologies (RATs) for
+providing services to mobile subscribers. This development has emphasized the
+requirement for unified control and management of diverse RATs. Although
+multiple RATs co-exist within today's cellular n"
+arxiv,1904.12895v1,Energy Balance in Cell Phone Radiofrequency Radiation Exposed Mice and Rats,http://arxiv.org/abs/1904.12895v1,2019,Abstract,"The National Toxicology Program exposed mice and rats to cell phone
+radiofrequency radiation. They observer cancers in male rats but not in male
+mice and different increases in body temperature between mice and rats using
+identical frequency and intensity exposures. Using the Faraday's Law model,
+thermoregulation considerations and an energy balance equation, we estimate
+that the increase in temperature of neural cir"
+arxiv,1907.08656v2,Optical cages made of graphitic frameworks,http://arxiv.org/abs/1907.08656v2,2019,Abstract,"In pursuit of infrared (IR) radiation absorbers, we examine quasicrystal
+structures made of graphite wires. An array of graphitic cages and
+cage-within-cage, and whose overall dimensions is smaller than the radiation
+wavelength exhibit a flat absorption spectrum, A~0.83 between 10-30 microns and
+a quality loss factor of L~0.83 (L=A/Q, wit"
+arxiv,2002.06256v1,Open5G: A Software-Defined Networking Protocol for 5G Multi-RAT Wireless Networks,http://arxiv.org/abs/2002.06256v1,2020,Abstract,"Mobile Networks today comprise of multiple Radio Access Technologies (RATs),
+e.g., 4G LTE, Wireless Local Area Network (WLAN), and the upcoming 5G-New Radio
+(5G-NR). The access networks of these RATs are controlled by RAT-specific
+entities, e.g., the resource management function"
+arxiv,2001.11208v1,Wireless Mesh Networking with Devices Equipped with Multi-Connectivity,http://arxiv.org/abs/2001.11208v1,2020,Abstract,"ss connectivity is rapidly becoming ubiquitous and affordable. As a
+consequence, most wireless devices are nowadays equipped with
+multi-connectivity, that is, availability of multiple radio access technologies
+(RATs). Each of these RATs has different characteristics that can be suitably
+utilized for different connectivity tasks. For example, a long-range low-rate
+RAT can be used for topology management and coordinati"
+arxiv,2303.11537v2,Interactive Geometry Editing of Neural Radiance Fields,http://arxiv.org/abs/2303.11537v2,2023,Abstract,"In this paper, we propose a method that enables interactive geometry editing
+for neural radiance fields manipulation. We use two proxy cages(inner cage and
+outer cage) to edit a scene. The inner cage defines the operation target, and
+the outer cage defines the adjustment space. Various operations apply to the
+two cages. After cage selection, operations on the inner cage"
+arxiv,2409.01618v2,High-Precision UWB-Based Real-Time Locating System for Rodent Behavioral Studies,http://arxiv.org/abs/2409.01618v2,2024,Abstract,"Rodents have long been established as the premier model for behavioral
+studies, traditionally raised and maintained in conventional cage environments.
+However, these settings often limit rodents' ability to exhibit their full
+range of intrinsic behaviors and natural interactions. Precise tracking of
+animal movement is a critical component in behavioral research, but traditional
+methods, such as video tracking, presen"
+pubmed,40961065,Chronic High Intensity Interval Training (HIIT) exercise in adolescent rats results in cocaine place aversion and ΔFosB induction.,https://pubmed.ncbi.nlm.nih.gov/40961065/,2025,Abstract,"High-Intensity Interval Training (HIIT) is a form of exercise that has been greatly popularized over the past few years for its many health benefits. Similar to other forms of exercise, HIIT may be beneficial in the prevention of substance use behaviors; however, the extent to which HIIT can impact the reinforcing effects of drugs of abuse during adolescence has not been fully evaluated. Here, we assess the effects o"
+pubmed,40907932,To play or not to play? Effects of social isolation length and stimulus rat familiarity on social play engagement in three laboratory rat strains.,https://pubmed.ncbi.nlm.nih.gov/40907932/,2025,Abstract,"Social play is displayed by juveniles of many mammalian species and is vital to the development of social skills as shown in humans and rats. Here, we determined how two external conditions, social isolation length and social stimulus familiarity, modulate social play levels (by the experimental animals) and social play defense tactics (by the stimulus animals) in juveniles of three common laboratory rat strains: Lon"
+pubmed,40884595,Ameliorating effect of veratric acid against mercury-induced neurologic deficit and reproductive toxicity in female rats.,https://pubmed.ncbi.nlm.nih.gov/40884595/,2025,Abstract,"The aim of this investigation was to explore the potential effects of veratric acid on central nervous and reproductive toxicity caused by mercuric chloride in female rats. Six mercury-exposed female rats in each group were separately treated with 12.5, 25, and 50 mg/kg of veratric acid. The brain and ovaries were then evaluated for biochemical and histopathological analysis. Based on the results obtained through thi"
+pubmed,40853428,Noninvasive monitoring of lower urinary tract dysfunction in rats with bladder outlet obstruction using uroflowmetry and ultrasonography.,https://pubmed.ncbi.nlm.nih.gov/40853428/,2025,Abstract,"y and ultrasound imaging. Eight-week-old male rats underwent partial ligation of the urethra to induce BOO. Voiding behavior was assessed preoperatively and at 1, 2, and 4 weeks postoperatively using metabolic cages. Urine flow rate was calculated based on changes in voided volume over time. Average flow rate, maximum flow rate, and voiding time were derived from these metabolic cage data. Bladder capacity and wall t"
+pubmed,40818543,Differential effects of central dopamine D2 receptor activation on the dynamic changes of maternal behavior throughout the postpartum period.,https://pubmed.ncbi.nlm.nih.gov/40818543/,2025,Abstract,"Maternal behavior during the postpartum period is mediated by various neural mechanisms. While dopamine D2 receptor activation is known to affect maternal behavior in early postpartum, its role in the late postpartum period remains unclear. This study explores the neural mechanisms governing maternal behavior across the early and late postpartum periods by activating D2 receptors in different maternal brain regions:"
+pubmed,40802516,"Abstinence from cocaine self-administration promotes microglial pruning of astrocytes, which drives cocaine-seeking behavior.",https://pubmed.ncbi.nlm.nih.gov/40802516/,2025,Abstract,"Rodent drug self-administration leads to a compromised ability of nucleus accumbens astrocytes to maintain glutamate homeostasis as well as to reductions in surface area, volume, and synaptic colocalization of astrocyte membranes. However, the mechanisms driving astrocyte responses to drug administration are unknown. Here, we report that long-access rat cocaine self-administration followed by prolonged home cage abst"
+pubmed,40779771,Revealing the different effects induced by antipsychotic drugs using an electrochemical microsensor to measure exocytosis in living cells.,https://pubmed.ncbi.nlm.nih.gov/40779771/,2025,Abstract,"Real-time monitoring of neurotransmitter release in living cells is crucial for understanding neural functions and the efficacy of drug actions. Here, we developed an electrochemical microsensor chip using a multidimensional nanosensitive material (MNG-1) that detects dopamine (DA) with high sensitivity, enabling real-time analysis of exocytosis in living cells. Our sensor-based technique does not require advanced eq"
+pubmed,40773442,Categorized and individualized behavioral phenotyping approaches for control and triple-hit schizophrenia-like model rats in acute and chronic reward-based systems: A pilot study.,https://pubmed.ncbi.nlm.nih.gov/40773442/,2025,Abstract,"A wide variety of acute test procedures are used for the behavioral characterization of schizophrenia rodent models, but prolonged observation in home-cage systems remains underexplored. This study aimed to profile the behavior of control (Wistar) and triple-hit schizophrenia-like (Wisket) model rats under two reward-based test conditions: the acute Ambitus test, a simple reward-collection task, and the delay-discoun"
+pubmed,40759085,A Rose in Any Other Context: Context Alters the Responses of Both Birds and Rodents to Novel Objects.,https://pubmed.ncbi.nlm.nih.gov/40759085/,2025,Abstract,"The detection of novelty is a cognitive ability that is fundamental to survival. Following detection, a decision must be made to either approach (neophilia) or avoid (neophobia) the novel stimulus. The tendency to choose one strategy over the other is referred to as an animal's neotic preference. To date, the bulk of research reports that mammals are neophilic, while birds tend to be neophobic. These data, however, a"
+pubmed,40757778,Plasma hepcidin level is elevated by water immersion-induced central fatigue via hepatic inflammatory response in male and female rats.,https://pubmed.ncbi.nlm.nih.gov/40757778/,2025,Abstract,"Fatigue is a subjective phenomenon caused by physical or mental overexertion; however, its objective biomarkers specific to the types of fatigue remain unclear. Here, we examined whether plasma hepcidin levels, which are regulated by inflammation or iron metabolism, are elevated by peripheral and central fatigue in male and female rats. Eight-week-old Wistar rats were divided into three groups: peripheral fatigue, ce"
